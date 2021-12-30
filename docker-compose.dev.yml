@@ -1,0 +1,105 @@
+---
+version: "3.3"
+services:
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr:${SONARR_VERS}
+    hostname: sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - UMASK_SET=022 #optional
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
+      # - DISCORD_WEBHOOK=""
+    volumes:
+      - ./config/sonarr:/config
+      - ./config/tv:/tv
+      - ./config/anime:/anime
+      - ./config/nzbget/downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  radarr:
+    image: ghcr.io/linuxserver/radarr:${RADARR_VERS}
+    hostname: radarr
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - UMASK_SET=022 #optional
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
+    volumes:
+      - ./config/radarr:/config
+      - ./config/movies:/movies
+      - ./config/nzbget/downloads:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  lidarr:
+    image: ghcr.io/linuxserver/lidarr:${LIDARR_VERS}
+    container_name: lidarr
+    hostname: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - UMASK_SET=022 #optional
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:lidarr
+    volumes:
+      - ./config/lidarr:/config
+      - ./config/music:/music
+      - ./config/nzbget/downloads:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    
+  nzbget:
+    image: ghcr.io/linuxserver/nzbget:${NZBGET_VERS}
+    hostname: nzbget
+    container_name: nzbget
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:nzbget
+    volumes:
+      - ./config/nzbget/config:/config
+      - ./config/nzbget/downloads:/downloads
+    ports:
+      - 6789:6789
+    restart: unless-stopped
+  
+  overseerr:
+    image: linuxserver/overseerr:${OVERSEERR_VERS}
+    hostname: overseerr
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=Amercia/Chicago
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:overseerr
+    ports:
+      - 5055:5055
+    volumes:
+      - ./config/overseerr:/config
+    restart: unless-stopped
+
+  prowlarr:
+    image: ghcr.io/linuxserver/prowlarr:${PROWLARR_VERS}
+    hostname: prowlarr
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:prowlarr
+    volumes:
+      - ./config/prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  
