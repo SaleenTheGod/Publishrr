@@ -1,5 +1,6 @@
 config/
 config/*
+ignore/
 *.postman
 dev-script.ps1
 ClusterInfo.txt
